@@ -2,18 +2,22 @@ import React, {useState} from 'react'
 import LoginStyles from "./Loginstyle";
 import TextField from "@material-ui/core/TextField"
 import Button from "@material-ui/core/Button"
-import {Link} from 'react-router-dom'
+import { Alert } from "@material-ui/lab";
+import {useAuth} from "../../context/authContext"
+import {Link, useHistory} from 'react-router-dom'
 
 const Login = () => {
+    const history = useHistory()
+    const {login} = useAuth()
     const classes = LoginStyles();
-    const [login, setLogin] = useState({
+    const [loginData, setLoginData] = useState({
     email:'',
     password:''
     })
-
+const [error,setError]=useState("")
 const handleChange = name=> e =>{
     e.preventDefault()
-    setLogin((prevState)=>{
+    setLoginData((prevState)=>{
         return{
             ...prevState,
             [name]:e.target.value
@@ -23,12 +27,21 @@ const handleChange = name=> e =>{
 
 }
 
-const submithandler = () =>{
-console.log(login)
+const submithandler = async (event) =>{
+event.preventDefault()
+
+try{
+    await login(loginData.email, loginData.password)
+     history.push("/")
+
+}catch{ 
+return setError('Failed to login')
+}
 }
 
     return (
         <>
+        {error&& <Alert severity="error">{error}</Alert>}
          <div className={classes.root}>
          <form className={classes.form} autoComplete="off">
             <h2>Login</h2>
@@ -38,7 +51,7 @@ console.log(login)
             label="Email"
             onChange={handleChange("email")}
             name="email"
-            value={Login.email}
+            value={loginData.email}
            />
 
            <TextField
@@ -47,7 +60,7 @@ console.log(login)
            label="Password"
            onChange={handleChange('password')}
            name="password"
-           value={Login.password}
+           value={loginData.password}
            />
 
            <Button onClick={submithandler}
@@ -59,7 +72,7 @@ console.log(login)
            </Button>
            <br />
           <h3 className={classes.login}>
-            Need to create account <Link to="/">Sign up</Link>
+            Need to create account <Link to="/signup">Sign up</Link>
             </h3>
          </form>
 
