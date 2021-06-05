@@ -28,8 +28,13 @@ const submithandler = async (event) =>{
 event.preventDefault();
 
 try{
- await signup(signupData.email,signupData.password)
- history.push("/login")
+    if(signupData.email == ''||signupData.password ==''){
+        setError('please fill all the fields!')
+    }else{
+        await signup(signupData.email,signupData.password)
+        setError('')
+        history.push("/login")
+    }
 
 }catch{
 return setError("Failed To Signup")

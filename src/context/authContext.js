@@ -3,7 +3,7 @@ import {auth} from "../firebase"
 
 const AuthContext=React.createContext();
 export const useAuth=()=>{
-    return useContext(AuthContext)
+return useContext(AuthContext)
 }
 
 export const AuthProvider=({children})=>{
@@ -23,7 +23,11 @@ export const AuthProvider=({children})=>{
     const logout=()=>{
         return auth.signOut()
     }
-
+    const forgetPassword=(email)=>{
+        return auth.sendPasswordResetEmail(email).then(res=>{
+            console.log(res)
+        })
+    }
     useEffect(()=>{
       const  unsubscriber=auth.onAuthStateChanged(user=>{
           setCurrentUser(user)
@@ -36,7 +40,8 @@ export const AuthProvider=({children})=>{
         signup,
         login,
         currentUser,
-        logout
+        logout,
+        forgetPassword,
     }
 
 

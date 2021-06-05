@@ -31,14 +31,20 @@ const submithandler = async (event) =>{
 event.preventDefault()
 
 try{
-    await login(loginData.email, loginData.password)
-     history.push("/")
-
+    if(loginData.email == ''||loginData.password==''){
+        setError('please fill all the fields!')
+        }else{
+            await login(loginData.email, loginData.password)
+            setError('')
+            history.push("/")
+        }
 }catch{ 
 return setError('Failed to login')
 }
 }
-
+const forgetPassword = () =>{
+    history.push("/forgetpassword")
+}  
     return (
         <>
         {error&& <Alert severity="error">{error}</Alert>}
@@ -73,6 +79,8 @@ return setError('Failed to login')
            <br />
           <h3 className={classes.login}>
             Need to create account <Link to="/signup">Sign up</Link>
+            <br/>
+            <Link onClick={forgetPassword} >Forget Password</Link>
             </h3>
          </form>
 
@@ -80,4 +88,4 @@ return setError('Failed to login')
         </>
     )
 }
-export default Login;
+export default Login
